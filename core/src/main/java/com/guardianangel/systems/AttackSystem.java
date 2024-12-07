@@ -7,25 +7,43 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.guardianangel.components.HealthComponent;
 import com.guardianangel.components.PositionComponent;
+import com.guardianangel.entities.weapons.Weapon;
 
 public class AttackSystem extends EntitySystem {
+    private Weapon weapon;
+
+    public AttackSystem(Weapon weapon) {
+        this.weapon = weapon;
+    }
+
     @Override
     public void update(float deltaTime) {
+        weapon.update(deltaTime);
+
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-            float mouseX = Gdx.input.getX();
-            float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
+            if (weapon.canShoot()) {
+                weapon.shoot();
 
-            for (Entity entity : getEngine().getEntitiesFor(Family.all(PositionComponent.class, HealthComponent.class).get())) {
-                PositionComponent position = entity.getComponent(PositionComponent.class);
-                HealthComponent health = entity.getComponent(HealthComponent.class);
+                float mouseX = Gdx.input.getX();
+                float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
 
-                if (Math.abs(position.x - mouseX) < 20 && Math.abs(position.y - mouseY) < 20) {
-                    health.health -= 10;
-                    if (health.health <= 0) {
-                        getEngine().removeEntity(entity);
+                for (Entity entity : getEngine().getEntitiesFor(Family.all(PositionComponent.class, HealthComponent.class).get())) {
+                    PositionComponent position = entity.getComponent(PositionComponent.class);
+                    HealthComponent health = entity.getComponent(HealthComponent.class);
+
+                    if (Math.abs(position.x - mouseX) < 20 && Math.abs(position.y - mouseY) < 20) {
+                        health.health -= 10;
+
+                        if (health.health <= 0) {
+                            getEngine().removeEntity(entity);
+                        }
                     }
                 }
             }
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            weapon.reload();
         }
     }
 }

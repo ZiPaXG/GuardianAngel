@@ -8,11 +8,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.guardianangel.entities.GuardEntity;
 import com.guardianangel.entities.WalkerEntity;
+import com.guardianangel.entities.weapons.Pistol;
 import com.guardianangel.systems.*;
 
 public class GameScreen implements Screen {
     private SpriteBatch batch;
     private Engine engine;
+    private HUDSystem hudSystem;
 
     public void createEntities() {
         Entity walker = new WalkerEntity(100, 100, 50);
@@ -26,13 +28,15 @@ public class GameScreen implements Screen {
     public void show() {
         batch = new SpriteBatch();
         engine = new Engine();
+        Pistol pistol = new Pistol();
+        hudSystem = new HUDSystem(pistol);
 
         engine.addSystem(new PathFollowerSystem());
         engine.addSystem(new GuardSystem());
         engine.addSystem(new CrosshairSystem());
-        engine.addSystem(new AttackSystem());
+        engine.addSystem(new AttackSystem(pistol));
         engine.addSystem(new RenderSystem());
-
+        engine.addSystem(hudSystem);
         createEntities();
     }
 
@@ -63,5 +67,6 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         batch.dispose();
+        hudSystem.dispose();
     }
 }

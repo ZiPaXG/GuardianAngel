@@ -7,13 +7,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.guardianangel.components.HealthComponent;
 import com.guardianangel.components.PositionComponent;
+import com.guardianangel.entities.PlayerEntity;
 import com.guardianangel.entities.weapons.Weapon;
 
 public class AttackSystem extends EntitySystem {
     private Weapon weapon;
+    private PlayerEntity player;
 
-    public AttackSystem(Weapon weapon) {
+    public AttackSystem(Weapon weapon, PlayerEntity player) {
         this.weapon = weapon;
+        this.player = player;
     }
 
     @Override
@@ -43,7 +46,10 @@ public class AttackSystem extends EntitySystem {
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-            weapon.reload();
+            if (player.getAmmoAmount() > 0) {
+                weapon.reload();
+                player.setAmmoAmount(-(player.getCurrentWeapon().getMaxAmmo() - player.getCurrentWeapon().getCurrentAmmo()));
+            }
         }
     }
 }

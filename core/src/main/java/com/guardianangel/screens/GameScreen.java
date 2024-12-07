@@ -7,6 +7,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.guardianangel.entities.GuardEntity;
+import com.guardianangel.entities.PlayerEntity;
 import com.guardianangel.entities.WalkerEntity;
 import com.guardianangel.entities.weapons.Pistol;
 import com.guardianangel.systems.*;
@@ -29,12 +30,13 @@ public class GameScreen implements Screen {
         batch = new SpriteBatch();
         engine = new Engine();
         Pistol pistol = new Pistol();
-        hudSystem = new HUDSystem(pistol);
+        PlayerEntity player = new PlayerEntity(pistol, 24);
+        hudSystem = new HUDSystem(player);
 
         engine.addSystem(new PathFollowerSystem());
         engine.addSystem(new GuardSystem());
         engine.addSystem(new CrosshairSystem());
-        engine.addSystem(new AttackSystem(pistol));
+        engine.addSystem(new AttackSystem(player.getCurrentWeapon(), player));
         engine.addSystem(new RenderSystem());
         engine.addSystem(hudSystem);
         createEntities();

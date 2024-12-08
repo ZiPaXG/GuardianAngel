@@ -7,22 +7,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.guardianangel.components.HealthComponent;
 import com.guardianangel.components.PositionComponent;
-import com.guardianangel.entities.PlayerEntity;
 import com.guardianangel.entities.weapons.Weapon;
 
 public class AttackSystem extends EntitySystem {
     private Weapon weapon;
-    private PlayerEntity player;
 
-    public AttackSystem(Weapon weapon, PlayerEntity player) {
+    public AttackSystem(Weapon weapon) {
         this.weapon = weapon;
-        this.player = player;
     }
 
     @Override
     public void update(float deltaTime) {
-        weapon.update(deltaTime);
-
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             if (weapon.canShoot()) {
                 weapon.shoot();
@@ -42,13 +37,6 @@ public class AttackSystem extends EntitySystem {
                         }
                     }
                 }
-            }
-        }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-            if (player.getAmmoAmount() > 0) {
-                weapon.reload();
-                player.setAmmoAmount(-(player.getCurrentWeapon().getMaxAmmo() - player.getCurrentWeapon().getCurrentAmmo()));
             }
         }
     }

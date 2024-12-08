@@ -36,7 +36,9 @@ public class GameScreen implements Screen {
         engine.addSystem(new PathFollowerSystem());
         engine.addSystem(new GuardSystem());
         engine.addSystem(new CrosshairSystem());
-        engine.addSystem(new AttackSystem(player.getCurrentWeapon(), player));
+        engine.addSystem(new ReloadSystem(player));
+        engine.addSystem(new AttackSystem(player.getCurrentWeapon()));
+        engine.addSystem(new HUDSystem(player));
         engine.addSystem(new RenderSystem());
         engine.addSystem(hudSystem);
         createEntities();

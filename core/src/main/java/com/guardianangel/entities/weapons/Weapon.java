@@ -7,6 +7,7 @@ public abstract class Weapon {
     protected float reloadCooldown;
     protected float reloadTimer;
     protected boolean isReloading;
+    protected int ammoToAddAfterReload;
 
     public Weapon(String name, int maxAmmo, float reloadCooldown) {
         this.name = name;
@@ -21,10 +22,16 @@ public abstract class Weapon {
         if (isReloading) {
             reloadTimer -= deltaTime;
             if (reloadTimer <= 0) {
-                currentAmmo = maxAmmo;
                 isReloading = false;
+
+                currentAmmo += ammoToAddAfterReload;
+                ammoToAddAfterReload = 0;
             }
         }
+    }
+
+    public int getAmmoToAddAfterReload() {
+        return ammoToAddAfterReload;
     }
 
     public boolean canShoot() {
@@ -38,10 +45,11 @@ public abstract class Weapon {
         }
     }
 
-    public void reload() {
+    public void reload(int ammoToAdd) {
         if (!isReloading && currentAmmo < maxAmmo) {
             isReloading = true;
             reloadTimer = reloadCooldown;
+            ammoToAddAfterReload = Math.min(ammoToAdd, maxAmmo - currentAmmo);
         }
     }
 

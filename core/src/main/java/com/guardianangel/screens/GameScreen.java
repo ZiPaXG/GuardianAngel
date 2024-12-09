@@ -2,12 +2,14 @@ package com.guardianangel.screens;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.guardianangel.components.PathComponent;
 import com.guardianangel.entities.GuardEntity;
@@ -20,8 +22,11 @@ public class GameScreen implements Screen {
     private SpriteBatch batch;
     private Engine engine;
     private HUDSystem hudSystem;
-
     private OrthographicCamera camera;
+
+    // Добавляем поля для карты
+    private TiledMap map;
+    private OrthogonalTiledMapRenderer mapRenderer;
 
     public void createEntities() {
         WalkerEntity walker = new WalkerEntity(100, 100, 50);
@@ -52,6 +57,11 @@ public class GameScreen implements Screen {
         camera.position.set((float) Gdx.graphics.getWidth() / 2, (float) Gdx.graphics.getHeight() / 2, 0);
         camera.update();
 
+        // Загружаем карту
+        map = new TmxMapLoader().load("ModernWorld/Map.tmx");
+        mapRenderer = new OrthogonalTiledMapRenderer(map);
+        mapRenderer.setView(camera);
+
         engine.addSystem(new PathFollowerSystem());
         engine.addSystem(new GuardSystem());
         engine.addSystem(new CrosshairSystem(camera));
@@ -69,8 +79,12 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         camera.update();
-        batch.setProjectionMatrix(camera.combined);
 
+        // Обновляем вид рендерера карты и отрисовываем карту
+        mapRenderer.setView(camera);
+        mapRenderer.render();
+
+        batch.setProjectionMatrix(camera.combined);
         engine.update(delta);
 
         if (Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.F11)) {
@@ -86,7 +100,11 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void resize(int width, int height) {}
+    public void resize(int width, int height) {
+        camera.viewportWidth = width;
+        camera.viewportHeight = height;
+        camera.update();
+    }
 
     @Override
     public void pause() {}
@@ -101,5 +119,7 @@ public class GameScreen implements Screen {
     public void dispose() {
         batch.dispose();
         hudSystem.dispose();
+        map.dispose();
+        mapRenderer.dispose();
     }
 }

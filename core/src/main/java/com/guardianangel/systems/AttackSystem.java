@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.guardianangel.components.HealthComponent;
 import com.guardianangel.components.PositionComponent;
+import com.guardianangel.components.CollisionComponent;
 import com.guardianangel.entities.weapons.Weapon;
 
 public class AttackSystem extends EntitySystem {
@@ -25,11 +26,11 @@ public class AttackSystem extends EntitySystem {
                 float mouseX = Gdx.input.getX();
                 float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
 
-                for (Entity entity : getEngine().getEntitiesFor(Family.all(PositionComponent.class, HealthComponent.class).get())) {
-                    PositionComponent position = entity.getComponent(PositionComponent.class);
+                for (Entity entity : getEngine().getEntitiesFor(Family.all(PositionComponent.class, HealthComponent.class, CollisionComponent.class).get())) {
                     HealthComponent health = entity.getComponent(HealthComponent.class);
+                    CollisionComponent collision = entity.getComponent(CollisionComponent.class);
 
-                    if (Math.abs(position.x - mouseX) < 20 && Math.abs(position.y - mouseY) < 20) {
+                    if (collision.bounds.contains(mouseX, mouseY)) {
                         health.health -= 10;
 
                         if (health.health <= 0) {

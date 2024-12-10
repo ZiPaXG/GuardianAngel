@@ -1,10 +1,9 @@
 package com.guardianangel.entities;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.math.Vector2;
-import com.guardianangel.components.HealthComponent;
-import com.guardianangel.components.PathComponent;
-import com.guardianangel.components.PositionComponent;
+import com.badlogic.gdx.graphics.Texture;
+import com.guardianangel.components.*;
+
 import java.util.ArrayList;
 
 public class WalkerEntity extends Entity {
@@ -21,5 +20,15 @@ public class WalkerEntity extends Entity {
         PathComponent path = new PathComponent();
         path.path = new ArrayList<>();
         this.add(path);
+
+        this.add(new WalkerTagComponent());
+
+        CollisionComponent collision = new CollisionComponent(x, y, 64, 96);
+        this.add(collision);
+
+        Texture spriteSheet = new Texture("Characters/MainCharacter/Cyborg_idle.png");
+        SpriteComponent sprite = new SpriteComponent(spriteSheet, 4, 0.2f);
+        this.add(sprite);
     }
+
 }

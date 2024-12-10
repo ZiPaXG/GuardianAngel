@@ -12,7 +12,7 @@ public class CrosshairSystem extends EntitySystem {
     private Texture crosshairTexture;
     private OrthographicCamera camera;
 
-    private float crosshairX, crosshairY;
+    private float crosshairX = 0, crosshairY = 0;
     private static final float SIZE = 32;
     private static final float SCALE = 2f;
 
@@ -20,8 +20,7 @@ public class CrosshairSystem extends EntitySystem {
         super(100);
         this.camera = camera;
         batch = new SpriteBatch();
-        crosshairTexture = new Texture(Gdx.files.internal("UI/Crosshairs/Crosshair2.png"));
-        crosshairTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        crosshairTexture = new Texture(Gdx.files.internal("UI/Crosshairs/Crosshair1.png"));
     }
 
     @Override
@@ -33,8 +32,8 @@ public class CrosshairSystem extends EntitySystem {
         float targetX = worldCoordinates.x;
         float targetY = worldCoordinates.y;
 
-        crosshairX += (targetX - crosshairX) * 0.1f;
-        crosshairY += (targetY - crosshairY) * 0.1f;
+        crosshairX += (targetX - crosshairX) * 0.15f;
+        crosshairY += (targetY - crosshairY) * 0.15f;
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();

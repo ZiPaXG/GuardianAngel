@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="180" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="18" nextobjectid="25">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="180" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="19" nextobjectid="26">
  <tileset firstgid="1" source="MW.tsx"/>
  <tileset firstgid="55" source="Background.tsx"/>
  <tileset firstgid="56" source="Props.tsx"/>
@@ -319,5 +319,8 @@
  </layer>
  <objectgroup id="17" name="Entities">
   <object id="24" name="Walker" x="32.8182" y="1483.32" width="20" height="20"/>
+ </objectgroup>
+ <objectgroup id="18" name="Objects">
+  <object id="25" name="SaveZone" x="176" y="1457" width="32" height="47"/>
  </objectgroup>
 </map>

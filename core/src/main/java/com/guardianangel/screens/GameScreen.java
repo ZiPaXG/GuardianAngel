@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -39,9 +40,23 @@ public class GameScreen implements Screen {
     private TiledMap map;
     private OrthogonalTiledMapRenderer mapRenderer;
 
-    public void createEntities() {
-        MapObject walkerObj = map.getLayers().get("Entities").getObjects().get("Walker");
+    private float getSaveZoneX(TiledMap map) {
+        MapObjects objects = map.getLayers().get("Objects").getObjects();
+        for (MapObject object : objects) {
+            if ("SaveZone".equals(object.getName())) {
+                if (object instanceof RectangleMapObject) {
+                    Rectangle rect = ((RectangleMapObject) object).getRectangle();
+                    return rect.x;
+                }
+            }
+        }
+        throw new IllegalArgumentException("Object 'SaveZone' not found!");
+    }
 
+    public void createEntities() {
+        float saveZoneX = getSaveZoneX(map);
+
+        MapObject walkerObj = map.getLayers().get("Entities").getObjects().get("Walker");
         if (walkerObj instanceof RectangleMapObject) {
             Rectangle rect = ((RectangleMapObject) walkerObj).getRectangle();
             float scale = 2.5f;
@@ -52,10 +67,7 @@ public class GameScreen implements Screen {
             WalkerEntity walker = new WalkerEntity(walkerX, walkerY, 50);
 
             PathComponent path = walker.getComponent(PathComponent.class);
-            path.path.add(new Vector2(walkerX + 100, walkerY));
-            path.path.add(new Vector2(walkerX + 200, walkerY));
-            path.path.add(new Vector2(walkerX + 300, walkerY));
-            path.path.add(new Vector2(walkerX + 400, walkerY));
+            path.path.add(new Vector2(saveZoneX * scale - walkerX, walkerY));
 
             engine.addEntity(walker);
         } else {

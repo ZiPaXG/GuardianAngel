@@ -22,12 +22,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.guardianangel.components.CollisionComponent;
 import com.guardianangel.components.PathComponent;
 import com.guardianangel.components.PositionComponent;
+import com.guardianangel.components.WalkerTagComponent;
 import com.guardianangel.entities.GuardEntity;
 import com.guardianangel.entities.PlayerEntity;
 import com.guardianangel.entities.WalkerEntity;
 import com.guardianangel.entities.weapons.Pistol;
 import com.guardianangel.systems.*;
 import com.guardianangel.utils.CameraController;
+
+import java.util.ArrayList;
 
 public class GameScreen implements Screen {
     private SpriteBatch batch;
@@ -40,21 +43,22 @@ public class GameScreen implements Screen {
     private TiledMap map;
     private OrthogonalTiledMapRenderer mapRenderer;
 
-    private float getSaveZoneX(TiledMap map) {
+    private ArrayList<Float> getSaveZoneX(TiledMap map) {
         MapObjects objects = map.getLayers().get("Objects").getObjects();
+        ArrayList<Float> rect_x = new ArrayList<>();
         for (MapObject object : objects) {
             if ("SaveZone".equals(object.getName())) {
                 if (object instanceof RectangleMapObject) {
                     Rectangle rect = ((RectangleMapObject) object).getRectangle();
-                    return rect.x;
+                    rect_x.add(rect.x);
                 }
             }
         }
-        throw new IllegalArgumentException("Object 'SaveZone' not found!");
+        return rect_x;
     }
 
     public void createEntities() {
-        float saveZoneX = getSaveZoneX(map);
+        ArrayList<Float> saveZoneX = getSaveZoneX(map);
 
         MapObject walkerObj = map.getLayers().get("Entities").getObjects().get("Walker");
         if (walkerObj instanceof RectangleMapObject) {
@@ -67,7 +71,9 @@ public class GameScreen implements Screen {
             WalkerEntity walker = new WalkerEntity(walkerX, walkerY, 50);
 
             PathComponent path = walker.getComponent(PathComponent.class);
-            path.path.add(new Vector2(saveZoneX * scale - walkerX, walkerY));
+            for (float saveZone : saveZoneX) {
+                path.path.add(new Vector2(saveZone * scale - walkerX, walkerY));
+            }
 
             engine.addEntity(walker);
         } else {
@@ -150,13 +156,21 @@ public class GameScreen implements Screen {
         shapeRenderer.end();
         engine.update(delta);
 
+        var players = engine.getEntitiesFor(Family.all(WalkerTagComponent.class).get());
+        if (players.size() > 0)
+        {
+            Entity player = players.get(0);
+            PositionComponent position = player.getComponent(PositionComponent.class);
+            if (position.x >= cameraController.getCamera().position.x + cameraController.getCamera().viewportWidth / 2) {
+                cameraController.shiftRight();
+            }
+        }
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F11)) {
-            if (Gdx.graphics.isFullscreen()) {
-                Gdx.graphics.setWindowedMode(1600, 900);
-            } else {
+            if (!Gdx.graphics.isFullscreen()) {
                 Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
             }
         }

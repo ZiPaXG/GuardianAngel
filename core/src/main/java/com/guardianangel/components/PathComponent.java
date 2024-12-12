@@ -7,5 +7,4 @@ import java.util.List;
 public class PathComponent implements Component {
     public List<Vector2> path;
     public int currentIndex = 0;
-    public float speed = 50;
 }

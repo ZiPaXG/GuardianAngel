@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.math.Vector2;
 import com.guardianangel.components.PathComponent;
 import com.guardianangel.components.PositionComponent;
@@ -14,7 +13,7 @@ import com.guardianangel.components.WalkerTagComponent;
 
 public class PathFollowerSystem extends EntitySystem {
     private static final float TOLERANCE = 1.0f;
-    private static final float SPEED = 100.0f;
+    private static final float SPEED = 160.0f;
 
     private boolean moveToNextPoint = false;
 

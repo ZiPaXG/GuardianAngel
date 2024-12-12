@@ -1,13 +1,19 @@
 package com.guardianangel;
 
 import com.badlogic.gdx.Game;
-import com.guardianangel.screens.GameScreen;
+import com.guardianangel.screens.MainMenuScreen;
 
 public class Main extends Game {
+    static Main instance;
+
+    public static Main getInstance() {
+        return instance;
+    }
 
     @Override
     public void create() {
-        this.setScreen(new GameScreen());
+        instance = this;
+        this.setScreen(new MainMenuScreen());
     }
 
     @Override

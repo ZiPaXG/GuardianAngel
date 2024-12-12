@@ -5,10 +5,13 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.guardianangel.Main;
 import com.guardianangel.components.HealthComponent;
 import com.guardianangel.components.PositionComponent;
 import com.guardianangel.components.CollisionComponent;
+import com.guardianangel.components.WalkerTagComponent;
 import com.guardianangel.entities.weapons.Weapon;
+import com.guardianangel.screens.GameOverScreen;
 
 public class AttackSystem extends EntitySystem {
     private Weapon weapon;
@@ -34,6 +37,8 @@ public class AttackSystem extends EntitySystem {
                         health.health -= 10;
 
                         if (health.health <= 0) {
+                            if (entity.getComponent(WalkerTagComponent.class) != null)
+                                Main.getInstance().setScreen(new GameOverScreen());
                             getEngine().removeEntity(entity);
                         }
                     }

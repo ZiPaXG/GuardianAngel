@@ -26,7 +26,7 @@ public class ReloadSystem extends EntitySystem {
 
                 if (ammoToReload > 0) {
                     weapon.reload(ammoToReload);
-                    player.setAmmoAmount(-ammoToReload);
+                    player.changeAmmoAmount(-ammoToReload);
                 }
             }
         }

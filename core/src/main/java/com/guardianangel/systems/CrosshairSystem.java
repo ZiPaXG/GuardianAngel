@@ -6,21 +6,24 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
+import com.guardianangel.entities.weapons.Weapon;
 
 public class CrosshairSystem extends EntitySystem {
     private SpriteBatch batch;
     private Texture crosshairTexture;
     private OrthographicCamera camera;
+    private Weapon weapon;
 
     private float crosshairX = 0, crosshairY = 0;
     private static final float SIZE = 32;
     private static final float SCALE = 2f;
 
-    public CrosshairSystem(OrthographicCamera camera) {
+    public CrosshairSystem(OrthographicCamera camera, Weapon weapon) {
         super(100);
         this.camera = camera;
+        this.weapon = weapon;
         batch = new SpriteBatch();
-        crosshairTexture = new Texture(Gdx.files.internal("UI/Crosshairs/Crosshair1.png"));
+        crosshairTexture = new Texture(Gdx.files.internal(this.weapon.getCrosshairPath()));
     }
 
     @Override
@@ -44,6 +47,10 @@ public class CrosshairSystem extends EntitySystem {
             SIZE * SCALE
         );
         batch.end();
+    }
+
+    public void changeCrosshair(Weapon weapon) {
+        crosshairTexture = new Texture(Gdx.files.internal(weapon.getCrosshairPath()));
     }
 
     public void dispose() {

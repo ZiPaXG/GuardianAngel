@@ -20,9 +20,15 @@ public class AttackSystem extends EntitySystem {
         this.weapon = weapon;
     }
 
+    public void changeWeapon(Weapon weapon) {
+        this.weapon = weapon;
+    }
+
     @Override
     public void update(float deltaTime) {
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+        weapon.update(deltaTime);
+
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             if (weapon.canShoot()) {
                 weapon.shoot();
 

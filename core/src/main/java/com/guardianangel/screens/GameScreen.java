@@ -27,6 +27,8 @@ import com.guardianangel.entities.GuardEntity;
 import com.guardianangel.entities.PlayerEntity;
 import com.guardianangel.entities.WalkerEntity;
 import com.guardianangel.entities.weapons.Pistol;
+import com.guardianangel.entities.weapons.Rifle;
+import com.guardianangel.entities.weapons.Weapon;
 import com.guardianangel.systems.*;
 import com.guardianangel.utils.CameraController;
 
@@ -39,9 +41,13 @@ public class GameScreen implements Screen {
     private CameraController cameraController;
     private ShapeRenderer shapeRenderer;
     private Texture background;
+    private PlayerEntity player;
+    private CrosshairSystem crosshairSystem;
+    private AttackSystem attackSystem;
 
     private TiledMap map;
     private OrthogonalTiledMapRenderer mapRenderer;
+
 
     private ArrayList<Float> getSaveZoneX(TiledMap map) {
         MapObjects objects = map.getLayers().get("Objects").getObjects();
@@ -89,8 +95,8 @@ public class GameScreen implements Screen {
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         engine = new Engine();
-        Pistol pistol = new Pistol();
-        PlayerEntity player = new PlayerEntity(pistol, 24);
+
+        player = new PlayerEntity(new Weapon[]{new Pistol(), new Rifle()}, new int[] {24, 300});
         hudSystem = new HUDSystem(player);
 
         OrthographicCamera camera = new OrthographicCamera();
@@ -106,11 +112,13 @@ public class GameScreen implements Screen {
         mapRenderer = new OrthogonalTiledMapRenderer(map, 2.5f);
         mapRenderer.setView(camera);
 
+        crosshairSystem = new CrosshairSystem(camera, player.getCurrentWeapon());
         engine.addSystem(new PathFollowerSystem());
         engine.addSystem(new GuardSystem());
-        engine.addSystem(new CrosshairSystem(camera));
+        engine.addSystem(crosshairSystem);
         engine.addSystem(new ReloadSystem(player));
-        engine.addSystem(new AttackSystem(player.getCurrentWeapon()));
+        attackSystem = new AttackSystem(player.getCurrentWeapon());
+        engine.addSystem(attackSystem);
         engine.addSystem(new HUDSystem(player));
         engine.addSystem(new RenderSystem(camera));
         engine.addSystem(hudSystem);
@@ -164,6 +172,19 @@ public class GameScreen implements Screen {
             if (position.x >= cameraController.getCamera().position.x + cameraController.getCamera().viewportWidth / 2) {
                 cameraController.shiftRight();
             }
+
+
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
+            player.switchWeapon(0);
+            crosshairSystem.changeCrosshair(player.getCurrentWeapon());
+            attackSystem.changeWeapon(player.getCurrentWeapon());
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
+            player.switchWeapon(1);
+            crosshairSystem.changeCrosshair(player.getCurrentWeapon());
+            attackSystem.changeWeapon(player.getCurrentWeapon());
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {

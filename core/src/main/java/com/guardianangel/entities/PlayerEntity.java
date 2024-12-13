@@ -4,42 +4,41 @@ import com.badlogic.ashley.core.Entity;
 import com.guardianangel.entities.weapons.Weapon;
 
 public class PlayerEntity extends Entity {
-    private Weapon currentWeapon;
-    private int ammoAmount;
+    private Weapon[] weapons;
+    private int currentWeaponIndex;
+    private int[] ammoAmount;
     private int scoreCount;
 
-    public PlayerEntity(Weapon currentWeapon, int ammoAmount) {
-        this.currentWeapon = currentWeapon;
+    public PlayerEntity(Weapon[] initialWeapons, int[] ammoAmount) {
+        this.weapons = initialWeapons;
+        this.currentWeaponIndex = 0;
         this.ammoAmount = ammoAmount;
         this.scoreCount = 0;
     }
 
     public Weapon getCurrentWeapon() {
-        return currentWeapon;
+        return weapons[currentWeaponIndex];
     }
 
-    public void setCurrentWeapon(Weapon currentWeapon) {
-        this.currentWeapon = currentWeapon;
+    public void switchWeapon(int index) {
+        if (index >= 0 && index < weapons.length) {
+            currentWeaponIndex = index;
+        }
     }
 
     public int getAmmoAmount() {
-        return ammoAmount;
+        return ammoAmount[currentWeaponIndex];
     }
 
-    public void setAmmoAmount(int changeAmount) {
-        if (Math.abs(changeAmount) > ammoAmount) {
-            ammoAmount = 0;
-        }
-        else if (ammoAmount > 0) {
-            ammoAmount += changeAmount;
-        }
+    public void changeAmmoAmount(int changeAmount) {
+        ammoAmount[currentWeaponIndex] = Math.max(0, ammoAmount[currentWeaponIndex] + changeAmount);
     }
 
     public int getScoreCount() {
         return scoreCount;
     }
 
-    public void setScoreCount(int scoreCount) {
-        this.scoreCount += scoreCount;
+    public void addScore(int score) {
+        this.scoreCount += score;
     }
 }

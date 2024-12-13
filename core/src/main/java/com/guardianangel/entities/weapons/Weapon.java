@@ -8,14 +8,20 @@ public abstract class Weapon {
     protected float reloadTimer;
     protected boolean isReloading;
     protected int ammoToAddAfterReload;
+    protected String crosshairPath;
 
-    public Weapon(String name, int maxAmmo, float reloadCooldown) {
+    protected float shootCooldown;
+    protected float shootTimer;
+
+    public Weapon(String name, int maxAmmo, float reloadCooldown, String crosshairPath, float shootCooldown) {
         this.name = name;
         this.maxAmmo = maxAmmo;
         this.currentAmmo = maxAmmo;
         this.reloadCooldown = reloadCooldown;
-        this.reloadTimer = 0;
+        this.shootCooldown = shootCooldown;
+        this.shootTimer = 0;
         this.isReloading = false;
+        this.crosshairPath = crosshairPath;
     }
 
     public void update(float deltaTime) {
@@ -28,19 +34,19 @@ public abstract class Weapon {
                 ammoToAddAfterReload = 0;
             }
         }
-    }
-
-    public int getAmmoToAddAfterReload() {
-        return ammoToAddAfterReload;
+        if (shootTimer > 0) {
+            shootTimer -= deltaTime;
+        }
     }
 
     public boolean canShoot() {
-        return !isReloading && currentAmmo > 0;
+        return !isReloading && currentAmmo > 0 && shootTimer <= 0;
     }
 
     public void shoot() {
         if (canShoot()) {
             currentAmmo--;
+            shootTimer = shootCooldown;
             onShoot();
         }
     }
@@ -65,5 +71,9 @@ public abstract class Weapon {
 
     public boolean isReloading() {
         return isReloading;
+    }
+
+    public String getCrosshairPath() {
+        return crosshairPath;
     }
 }

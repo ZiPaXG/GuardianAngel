@@ -1,5 +1,7 @@
 package com.guardianangel.entities.weapons;
 
+import com.badlogic.gdx.audio.Sound;
+
 public abstract class Weapon {
     protected String name;
     protected int maxAmmo;
@@ -12,6 +14,9 @@ public abstract class Weapon {
 
     protected float shootCooldown;
     protected float shootTimer;
+
+    protected Sound shootSound;
+    protected Sound reloadSound;
 
     public Weapon(String name, int maxAmmo, float reloadCooldown, String crosshairPath, float shootCooldown) {
         this.name = name;
@@ -56,10 +61,12 @@ public abstract class Weapon {
             isReloading = true;
             reloadTimer = reloadCooldown;
             ammoToAddAfterReload = Math.min(ammoToAdd, maxAmmo - currentAmmo);
+            onReload();
         }
     }
 
     protected abstract void onShoot();
+    protected abstract void onReload();
 
     public int getCurrentAmmo() {
         return currentAmmo;

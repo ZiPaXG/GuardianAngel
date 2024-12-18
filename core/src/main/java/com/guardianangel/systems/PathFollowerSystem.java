@@ -47,7 +47,7 @@ public class PathFollowerSystem extends EntitySystem {
                 position.x = currentPosition.x;
                 position.y = currentPosition.y;
 
-                sprite.setAnimation(sprite.runAnimation);;
+                sprite.setAnimation(sprite.runAnimation);
 
                 if (currentPosition.dst(currentTarget) <= TOLERANCE) {
                     path.currentIndex++;

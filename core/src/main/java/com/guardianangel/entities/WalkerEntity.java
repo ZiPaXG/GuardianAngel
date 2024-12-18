@@ -26,16 +26,22 @@ public class WalkerEntity extends Entity {
         CollisionComponent collision = new CollisionComponent(x, y, 64, 96);
         this.add(collision);
 
+        SpriteComponent spriteComponent = getSpriteComponent();
+
+        this.add(spriteComponent);
+    }
+
+    private static SpriteComponent getSpriteComponent() {
         Texture idleSpriteSheet = new Texture("Characters/MainCharacter/Cyborg_idle.png");
         Texture runSpriteSheet = new Texture("Characters/MainCharacter/Cyborg_run.png");
         Texture hurtSpriteSheet = new Texture("Characters/MainCharacter/Cyborg_hurt.png");
+        Texture deathSpriteSheet = new Texture("Characters/MainCharacter/Cyborg_death.png");
 
-        SpriteComponent spriteComponent = new SpriteComponent(
+        return new SpriteComponent(
             idleSpriteSheet, 4, 0.2f,
             runSpriteSheet, 6, 0.1f,
-            hurtSpriteSheet, 2, 0.1f
+            hurtSpriteSheet, 2, 0.1f,
+            deathSpriteSheet, 6, 0.2f
         );
-
-        this.add(spriteComponent);
     }
 }

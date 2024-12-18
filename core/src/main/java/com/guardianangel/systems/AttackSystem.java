@@ -48,10 +48,24 @@ public class AttackSystem extends EntitySystem {
                     if (collision.bounds.contains(mouseX, mouseY)) {
                         health.health -= 10;
 
-                        if (sprite != null && !sprite.isHurtOrDead && sprite.hurtAnimation != null) {
+                        if (sprite != null && health.health <= 0) {
+                            if (entity.getComponent(WalkerTagComponent.class) != null)
+                            {
+                                sprite.setAnimation(sprite.deathAnimation);
+                                sprite.isHurtOrDead = true;
+                                Timer.schedule(new Timer.Task() {
+                                    @Override
+                                    public void run() {
+                                        getEngine().removeEntity(entity);
+                                        Main.getInstance().setScreen(new GameOverScreen());
+                                    }
+                                }, sprite.deathAnimation.getAnimationDuration() - 0.05f);
+                            }
+                        }
+
+                        else if (sprite != null && !sprite.isHurtOrDead && sprite.hurtAnimation != null) {
                             sprite.setAnimation(sprite.hurtAnimation);
                             sprite.isHurtOrDead = true;
-                            sprite.stateTime = 0;
                             Timer.schedule(new Timer.Task() {
                                 @Override
                                 public void run() {
@@ -61,11 +75,7 @@ public class AttackSystem extends EntitySystem {
                         }
 
 
-                        if (health.health <= 0) {
-                            if (entity.getComponent(WalkerTagComponent.class) != null)
-                                Main.getInstance().setScreen(new GameOverScreen());
-                            getEngine().removeEntity(entity);
-                        }
+
                     }
                 }
             }

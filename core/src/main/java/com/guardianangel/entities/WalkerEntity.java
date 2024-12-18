@@ -13,7 +13,7 @@ public class WalkerEntity extends Entity {
         position.y = y;
         this.add(position);
 
-        HealthComponent health = new HealthComponent();
+        HealthComponent health = new HealthComponent(50);
         health.health = initialHealth;
         this.add(health);
 

@@ -19,10 +19,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.guardianangel.components.CollisionComponent;
-import com.guardianangel.components.PathComponent;
-import com.guardianangel.components.PositionComponent;
-import com.guardianangel.components.WalkerTagComponent;
+import com.guardianangel.components.*;
 import com.guardianangel.entities.EnemyEntity;
 import com.guardianangel.entities.PlayerEntity;
 import com.guardianangel.entities.WalkerEntity;
@@ -153,10 +150,16 @@ public class GameScreen implements Screen {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
         for (Entity entity : engine.getEntitiesFor(Family.all(CollisionComponent.class, PositionComponent.class).get())) {
+
             PositionComponent position = entity.getComponent(PositionComponent.class);
             CollisionComponent collision = entity.getComponent(CollisionComponent.class);
 
-            collision.bounds.setPosition(position.x + 5, position.y);
+            if (entity.getComponent(WalkerTagComponent.class) != null) {
+                collision.bounds.setPosition(position.x + 5, position.y);
+            }
+            else if (entity.getComponent(EnemyTagComponent.class) != null) {
+                collision.bounds.setPosition(position.x - collision.bounds.width - 10, position.y);
+            }
 
             shapeRenderer.setColor(1, 0, 0, 1);
             shapeRenderer.rect(collision.bounds.x, collision.bounds.y, collision.bounds.width, collision.bounds.height);

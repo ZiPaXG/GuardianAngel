@@ -46,33 +46,49 @@ public class AttackSystem extends EntitySystem {
                     SpriteComponent sprite = spriteMapper.get(entity);
 
                     if (collision.bounds.contains(mouseX, mouseY)) {
-                        health.health -= 10;
+                        if (!health.isDead) { // Проверяем, не мертв ли враг
+                            health.health -= weapon.getDamage(); // Уменьшаем здоровье на урон оружия
 
-                        if (sprite != null && health.health <= 0) {
-                            sprite.setAnimation(sprite.deathAnimation);
-                            sprite.isHurtOrDead = true;
-                            Timer.schedule(new Timer.Task() {
-                                @Override
-                                public void run() {
-                                    getEngine().removeEntity(entity);
-                                    if (entity.getComponent(WalkerTagComponent.class) != null)
-                                        Main.getInstance().setScreen(new GameOverScreen());
+                            if (health.health <= 0) {
+                                health.isDead = true; // Помечаем врага как мертвого
+                                sprite.setAnimation(sprite.deathAnimation);
+                                sprite.isHurtOrDead = true;
+
+                                HUDSystem hudSystem = getEngine().getSystem(HUDSystem.class);
+                                if (hudSystem != null) {
+                                    if (entity.getComponent(WalkerTagComponent.class) == null) {
+                                        hudSystem.addScore(100); // Добавляем 100 очков за убийство врага
+                                    } else {
+                                        hudSystem.addScore(-50); // Вычитаем 50 очков за попадание в WalkerEntity
+                                    }
                                 }
-                            }, sprite.deathAnimation.getAnimationDuration() - 0.05f);
-                        } else if (sprite != null && !sprite.isHurtOrDead && sprite.hurtAnimation != null) {
-                            sprite.setAnimation(sprite.hurtAnimation);
-                            sprite.isInHurtState = true;
-                            Timer.schedule(new Timer.Task() {
-                                @Override
-                                public void run() {
-                                    sprite.isInHurtState = false;
-                                }
-                            }, sprite.hurtAnimation.getAnimationDuration());
+
+                                Timer.schedule(new Timer.Task() {
+                                    @Override
+                                    public void run() {
+                                        getEngine().removeEntity(entity);
+                                        if (entity.getComponent(WalkerTagComponent.class) != null)
+                                            Main.getInstance().setScreen(new GameOverScreen());
+                                    }
+                                }, sprite.deathAnimation.getAnimationDuration() - 0.05f);
+                            } else if (!sprite.isHurtOrDead && sprite.hurtAnimation != null) {
+                                sprite.setAnimation(sprite.hurtAnimation);
+                                sprite.isInHurtState = true;
+                                Timer.schedule(new Timer.Task() {
+                                    @Override
+                                    public void run() {
+                                        sprite.isInHurtState = false;
+                                    }
+                                }, sprite.hurtAnimation.getAnimationDuration());
+                            }
                         }
                     }
                 }
             }
         }
     }
+
+
+
 
 }

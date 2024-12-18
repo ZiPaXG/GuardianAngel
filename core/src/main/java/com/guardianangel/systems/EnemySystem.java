@@ -24,6 +24,8 @@ public class EnemySystem extends EntitySystem {
             if (!sprite.isHurtOrDead) {
                 sprite.setAnimation(sprite.runAnimation);
                 position.x -= speed * deltaTime;
+
+                sprite.flipHorizontally = true;
             }
 
             if (position.x + 64 < 0) {

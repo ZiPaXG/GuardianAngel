@@ -18,7 +18,10 @@ public abstract class Weapon {
     protected Sound shootSound;
     protected Sound reloadSound;
 
-    public Weapon(String name, int maxAmmo, float reloadCooldown, String crosshairPath, float shootCooldown) {
+    // Новый параметр урона
+    protected int damage;
+
+    public Weapon(String name, int maxAmmo, float reloadCooldown, String crosshairPath, float shootCooldown, int damage) {
         this.name = name;
         this.maxAmmo = maxAmmo;
         this.currentAmmo = maxAmmo;
@@ -27,6 +30,7 @@ public abstract class Weapon {
         this.shootTimer = 0;
         this.isReloading = false;
         this.crosshairPath = crosshairPath;
+        this.damage = damage; // Инициализация урона
     }
 
     public void update(float deltaTime) {
@@ -83,4 +87,9 @@ public abstract class Weapon {
     public String getCrosshairPath() {
         return crosshairPath;
     }
+
+    public int getDamage() {
+        return damage; // Получаем урон
+    }
 }
+

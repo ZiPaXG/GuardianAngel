@@ -1,7 +1,6 @@
 package com.guardianangel.components;
 
 import com.badlogic.ashley.core.Component;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.Texture;
@@ -19,6 +18,7 @@ public class SpriteComponent implements Component {
 
     public float stateTime = 0f;
     private float scale = 3f;
+    public boolean flipHorizontally = false; // Флаг для флипа
 
     public SpriteComponent(Texture idleSpriteSheet, int idleFrameCount, float idleFrameDuration,
                            Texture runSpriteSheet, int runFrameCount, float runFrameDuration,
@@ -53,10 +53,18 @@ public class SpriteComponent implements Component {
     }
 
     public void render(SpriteBatch batch, float x, float y) {
-        float width = currentAnimation.getKeyFrame(stateTime, true).getRegionWidth() * scale;
-        float height = currentAnimation.getKeyFrame(stateTime, true).getRegionHeight() * scale;
+        TextureRegion frame = currentAnimation.getKeyFrame(stateTime, true);
 
-        batch.draw(currentAnimation.getKeyFrame(stateTime, true), x, y, width, height);
+        // Проверяем, нужно ли флипнуть текущий кадр
+        if (flipHorizontally && !frame.isFlipX()) {
+            frame.flip(true, false);
+        } else if (!flipHorizontally && frame.isFlipX()) {
+            frame.flip(true, false);
+        }
+
+        float width = frame.getRegionWidth() * scale;
+        float height = frame.getRegionHeight() * scale;
+        float adjustedX = flipHorizontally ? x - width : x;
+        batch.draw(frame, adjustedX, y, width, height);
     }
 }
-

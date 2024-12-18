@@ -11,8 +11,7 @@ public class EnemyEntity extends Entity {
         position.y = 241.70013f;
         this.add(position);
 
-        HealthComponent health = new HealthComponent();
-        health.health = initialHealth;
+        HealthComponent health = new HealthComponent(50);
         this.add(health);
 
         this.add(new EnemyTagComponent());

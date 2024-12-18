@@ -55,7 +55,6 @@ public class SpriteComponent implements Component {
     public void render(SpriteBatch batch, float x, float y) {
         TextureRegion frame = currentAnimation.getKeyFrame(stateTime, true);
 
-        // Проверяем, нужно ли флипнуть текущий кадр
         if (flipHorizontally && !frame.isFlipX()) {
             frame.flip(true, false);
         } else if (!flipHorizontally && frame.isFlipX()) {

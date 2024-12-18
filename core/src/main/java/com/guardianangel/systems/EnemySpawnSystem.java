@@ -16,7 +16,7 @@ public class EnemySpawnSystem extends EntitySystem {
 
     private int maxEnemiesOnWave = 10;
     private int enemiesSpawned = 0;
-
+    private int waves = 3;
     public EnemySpawnSystem(Engine engine, OrthographicCamera camera) {
         this.engine = engine;
         this.camera = camera;
@@ -41,15 +41,17 @@ public class EnemySpawnSystem extends EntitySystem {
         }
     }
 
-    public int getEnemiesSpawned() {
-        return enemiesSpawned;
-    }
-
     public int getMaxEnemiesOnWave() {
         return maxEnemiesOnWave;
     }
 
     public void resetWave() {
         enemiesSpawned = 0;
+    }
+    public int getWaves() {
+        return waves;
+    }
+    public void decreaseWaves() {
+        waves--;
     }
 }

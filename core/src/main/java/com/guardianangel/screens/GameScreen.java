@@ -110,14 +110,14 @@ public class GameScreen implements Screen {
         mapRenderer.setView(camera);
 
         crosshairSystem = new CrosshairSystem(camera, player.getCurrentWeapon());
-        engine.addSystem(new EnemySystem());
+        engine.addSystem(new EnemySystem(cameraController.getCamera()));
         EnemySpawnSystem spawnSystem = new EnemySpawnSystem(engine, cameraController.getCamera());
         engine.addSystem(spawnSystem);
-        engine.addSystem(new PathFollowerSystem(spawnSystem));
         engine.addSystem(crosshairSystem);
         engine.addSystem(new ReloadSystem(player));
-        attackSystem = new AttackSystem(player.getCurrentWeapon(), player);
+        attackSystem = new AttackSystem(player.getCurrentWeapon(), player, cameraController.getCamera());
         engine.addSystem(attackSystem);
+        engine.addSystem(new PathFollowerSystem(spawnSystem, attackSystem));
         engine.addSystem(new HUDSystem(player));
         engine.addSystem(new RenderSystem(camera));
         engine.addSystem(hudSystem);
@@ -163,7 +163,7 @@ public class GameScreen implements Screen {
             }
 
             shapeRenderer.setColor(1, 0, 0, 1);
-            shapeRenderer.rect(collision.bounds.x, collision.bounds.y, collision.bounds.width, collision.bounds.height);
+            //shapeRenderer.rect(collision.bounds.x, collision.bounds.y, collision.bounds.width, collision.bounds.height);
         }
 
         shapeRenderer.end();

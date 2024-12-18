@@ -28,13 +28,14 @@ public class WalkerEntity extends Entity {
 
         Texture idleSpriteSheet = new Texture("Characters/MainCharacter/Cyborg_idle.png");
         Texture runSpriteSheet = new Texture("Characters/MainCharacter/Cyborg_run.png");
+        Texture hurtSpriteSheet = new Texture("Characters/MainCharacter/Cyborg_hurt.png");
 
         SpriteComponent spriteComponent = new SpriteComponent(
             idleSpriteSheet, 4, 0.2f,
-            runSpriteSheet, 6, 0.1f
+            runSpriteSheet, 6, 0.1f,
+            hurtSpriteSheet, 2, 0.1f
         );
 
         this.add(spriteComponent);
     }
-
 }

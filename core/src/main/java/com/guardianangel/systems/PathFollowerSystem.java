@@ -32,32 +32,35 @@ public class PathFollowerSystem extends EntitySystem {
                 continue;
             }
 
-            if (!moveToNextPoint) {
-                sprite.setAnimation(sprite.idleAnimation);;
-                continue;
-            }
-
-            Vector2 currentTarget = path.path.get(path.currentIndex);
-            Vector2 currentPosition = new Vector2(position.x, position.y);
-
-            Vector2 direction = currentTarget.cpy().sub(currentPosition).nor();
-            currentPosition.mulAdd(direction, SPEED * deltaTime);
-
-            position.x = currentPosition.x;
-            position.y = currentPosition.y;
-
-            sprite.setAnimation(sprite.runAnimation);;
-
-            if (currentPosition.dst(currentTarget) <= TOLERANCE) {
-                path.currentIndex++;
-                moveToNextPoint = false;
-
-                if (path.currentIndex >= path.path.size()) {
-                    path.path.clear();
-                    path.currentIndex = 0;
+            if (!sprite.isHurtOrDead) {
+                if (!moveToNextPoint) {
                     sprite.setAnimation(sprite.idleAnimation);
+                    continue;
+                }
+
+                Vector2 currentTarget = path.path.get(path.currentIndex);
+                Vector2 currentPosition = new Vector2(position.x, position.y);
+
+                Vector2 direction = currentTarget.cpy().sub(currentPosition).nor();
+                currentPosition.mulAdd(direction, SPEED * deltaTime);
+
+                position.x = currentPosition.x;
+                position.y = currentPosition.y;
+
+                sprite.setAnimation(sprite.runAnimation);;
+
+                if (currentPosition.dst(currentTarget) <= TOLERANCE) {
+                    path.currentIndex++;
+                    moveToNextPoint = false;
+
+                    if (path.currentIndex >= path.path.size()) {
+                        path.path.clear();
+                        path.currentIndex = 0;
+                        sprite.setAnimation(sprite.idleAnimation);
+                    }
                 }
             }
+
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.guardianangel.components;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,13 +11,19 @@ public class SpriteComponent implements Component {
     public Animation<TextureRegion> currentAnimation;
     public Animation<TextureRegion> idleAnimation;
     public Animation<TextureRegion> runAnimation;
+    public Animation<TextureRegion> hurtAnimation;
+
+    public boolean isHurtOrDead = false;
+
     public float stateTime = 0f;
     private float scale = 3f;
 
     public SpriteComponent(Texture idleSpriteSheet, int idleFrameCount, float idleFrameDuration,
-                           Texture runSpriteSheet, int runFrameCount, float runFrameDuration) {
+                           Texture runSpriteSheet, int runFrameCount, float runFrameDuration,
+                           Texture hurtSpriteSheet, int hurtFrameCount, float hurtFrameDuration) {
         this.idleAnimation = createAnimation(idleSpriteSheet, idleFrameCount, idleFrameDuration);
         this.runAnimation = createAnimation(runSpriteSheet, runFrameCount, runFrameDuration);
+        this.hurtAnimation = createAnimation(hurtSpriteSheet, hurtFrameCount, hurtFrameDuration);
         this.currentAnimation = idleAnimation;
     }
 

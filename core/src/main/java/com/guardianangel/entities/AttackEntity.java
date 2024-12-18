@@ -5,8 +5,8 @@ import com.guardianangel.components.GuardTagComponent;
 import com.guardianangel.components.HealthComponent;
 import com.guardianangel.components.PositionComponent;
 
-public class GuardEntity extends Entity {
-    public GuardEntity(float x, float y, int initialHealth) {
+public class AttackEntity extends Entity {
+    public AttackEntity(float x, float y, int initialHealth) {
         PositionComponent position = new PositionComponent();
         position.x = x;
         position.y = y;

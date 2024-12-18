@@ -23,7 +23,7 @@ import com.guardianangel.components.CollisionComponent;
 import com.guardianangel.components.PathComponent;
 import com.guardianangel.components.PositionComponent;
 import com.guardianangel.components.WalkerTagComponent;
-import com.guardianangel.entities.GuardEntity;
+import com.guardianangel.entities.AttackEntity;
 import com.guardianangel.entities.PlayerEntity;
 import com.guardianangel.entities.WalkerEntity;
 import com.guardianangel.entities.weapons.Pistol;
@@ -87,7 +87,7 @@ public class GameScreen implements Screen {
             System.err.println("Walker не RectangleMapObject!!!");
         }
 
-        Entity guard = new GuardEntity(200, 200, 100);
+        Entity guard = new AttackEntity(200, 200, 100);
         engine.addEntity(guard);
     }
 
@@ -174,8 +174,6 @@ public class GameScreen implements Screen {
             if (position.x >= cameraController.getCamera().position.x + cameraController.getCamera().viewportWidth / 2) {
                 cameraController.shiftRight();
             }
-
-
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
@@ -191,11 +189,6 @@ public class GameScreen implements Screen {
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F11)) {
-            if (!Gdx.graphics.isFullscreen()) {
-                Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
-            }
         }
     }
 

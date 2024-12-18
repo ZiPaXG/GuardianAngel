@@ -32,6 +32,11 @@ public class PathFollowerSystem extends EntitySystem {
                 continue;
             }
 
+            if (sprite.isInHurtState) {
+                sprite.setAnimation(sprite.hurtAnimation);
+                continue;
+            }
+
             if (!sprite.isHurtOrDead) {
                 if (!moveToNextPoint) {
                     sprite.setAnimation(sprite.idleAnimation);
@@ -60,7 +65,7 @@ public class PathFollowerSystem extends EntitySystem {
                     }
                 }
             }
-
         }
     }
+
 }

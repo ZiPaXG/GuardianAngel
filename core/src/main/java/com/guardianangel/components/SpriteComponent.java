@@ -15,6 +15,7 @@ public class SpriteComponent implements Component {
     public Animation<TextureRegion> deathAnimation;
 
     public boolean isHurtOrDead = false;
+    public boolean isInHurtState = false;
 
     public float stateTime = 0f;
     private float scale = 3f;
@@ -27,11 +28,13 @@ public class SpriteComponent implements Component {
         this.runAnimation = createAnimation(runSpriteSheet, runFrameCount, runFrameDuration, true);
         this.hurtAnimation = createAnimation(hurtSpriteSheet, hurtFrameCount, hurtFrameDuration, false);
         this.deathAnimation = createAnimation(deathSpriteSheet, deathFrameCount, deathFrameDuration, false);
-        this.currentAnimation = idleAnimation;
+        this.currentAnimation = idleAnimation != null ? idleAnimation : runAnimation;
     }
 
-
     private Animation<TextureRegion> createAnimation(Texture spriteSheet, int frameCount, float frameDuration, boolean loop) {
+        if (spriteSheet == null)
+            return null;
+
         TextureRegion[] frames = new TextureRegion[frameCount];
         TextureRegion[][] tmp = TextureRegion.split(spriteSheet, spriteSheet.getWidth() / frameCount, spriteSheet.getHeight());
         for (int i = 0; i < frameCount; i++) {
@@ -42,11 +45,9 @@ public class SpriteComponent implements Component {
         return animation;
     }
 
-
     public void setAnimation(Animation<TextureRegion> animation) {
         if (this.currentAnimation != animation) {
             this.currentAnimation = animation;
-
             this.stateTime = 0f;
         }
     }
@@ -58,3 +59,4 @@ public class SpriteComponent implements Component {
         batch.draw(currentAnimation.getKeyFrame(stateTime, true), x, y, width, height);
     }
 }
+

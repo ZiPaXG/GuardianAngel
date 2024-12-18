@@ -14,12 +14,15 @@ import com.guardianangel.components.WalkerTagComponent;
 public class PathFollowerSystem extends EntitySystem {
     private static final float TOLERANCE = 1.0f;
     private static final float SPEED = 160.0f;
-
+    private EnemySpawnSystem spawnSystem;
     private boolean moveToNextPoint = false;
 
+    public PathFollowerSystem(EnemySpawnSystem spawnSystem) {
+        this.spawnSystem = spawnSystem;
+    }
     @Override
     public void update(float deltaTime) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
+        if (spawnSystem.getEnemiesSpawned() == spawnSystem.getMaxEnemiesOnWave()) {
             moveToNextPoint = true;
         }
 

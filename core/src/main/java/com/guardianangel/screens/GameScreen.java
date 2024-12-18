@@ -93,7 +93,7 @@ public class GameScreen implements Screen {
         shapeRenderer = new ShapeRenderer();
         engine = new Engine();
 
-        player = new PlayerEntity(new Weapon[]{new Pistol(), new Rifle()}, new int[] {24, 300});
+        player = new PlayerEntity(new Weapon[]{new Pistol(), new Rifle()}, new int[] {24, 60});
         hudSystem = new HUDSystem(player);
 
         OrthographicCamera camera = new OrthographicCamera();
@@ -111,11 +111,12 @@ public class GameScreen implements Screen {
 
         crosshairSystem = new CrosshairSystem(camera, player.getCurrentWeapon());
         engine.addSystem(new EnemySystem());
-        engine.addSystem(new EnemySpawnSystem(engine, cameraController.getCamera()));
-        engine.addSystem(new PathFollowerSystem());
+        EnemySpawnSystem spawnSystem = new EnemySpawnSystem(engine, cameraController.getCamera());
+        engine.addSystem(spawnSystem);
+        engine.addSystem(new PathFollowerSystem(spawnSystem));
         engine.addSystem(crosshairSystem);
         engine.addSystem(new ReloadSystem(player));
-        attackSystem = new AttackSystem(player.getCurrentWeapon());
+        attackSystem = new AttackSystem(player.getCurrentWeapon(), player);
         engine.addSystem(attackSystem);
         engine.addSystem(new HUDSystem(player));
         engine.addSystem(new RenderSystem(camera));

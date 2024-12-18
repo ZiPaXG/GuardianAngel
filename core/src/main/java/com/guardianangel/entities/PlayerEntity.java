@@ -34,6 +34,12 @@ public class PlayerEntity extends Entity {
         ammoAmount[currentWeaponIndex] = Math.max(0, ammoAmount[currentWeaponIndex] + changeAmount);
     }
 
+    public void changeAmmoAmountForWeapon(int weaponIndex, int changeAmount) {
+        if (weaponIndex >= 0 && weaponIndex < ammoAmount.length) {
+            ammoAmount[weaponIndex] = Math.max(0, ammoAmount[weaponIndex] + changeAmount);
+        }
+    }
+
     public int getScoreCount() {
         return scoreCount;
     }

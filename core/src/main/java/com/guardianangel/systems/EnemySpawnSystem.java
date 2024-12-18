@@ -41,6 +41,14 @@ public class EnemySpawnSystem extends EntitySystem {
         }
     }
 
+    public int getEnemiesSpawned() {
+        return enemiesSpawned;
+    }
+
+    public int getMaxEnemiesOnWave() {
+        return maxEnemiesOnWave;
+    }
+
     public void resetWave() {
         enemiesSpawned = 0;
     }

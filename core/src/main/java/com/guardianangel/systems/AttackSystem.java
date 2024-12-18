@@ -9,17 +9,22 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.Timer;
 import com.guardianangel.Main;
 import com.guardianangel.components.*;
+import com.guardianangel.entities.PlayerEntity;
 import com.guardianangel.entities.weapons.Weapon;
+import com.guardianangel.entities.weapons.WeaponType;
 import com.guardianangel.screens.GameOverScreen;
+import com.guardianangel.utils.AmmoDropUtil;
 
 public class AttackSystem extends EntitySystem {
     private Weapon weapon;
+    private PlayerEntity player;
     private ComponentMapper<SpriteComponent> spriteMapper;
     private ComponentMapper<HealthComponent> healthMapper;
     private ComponentMapper<CollisionComponent> collisionMapper;
 
-    public AttackSystem(Weapon weapon) {
+    public AttackSystem(Weapon weapon, PlayerEntity player) {
         this.weapon = weapon;
+        this.player = player;
         this.spriteMapper = ComponentMapper.getFor(SpriteComponent.class);
         this.healthMapper = ComponentMapper.getFor(HealthComponent.class);
         this.collisionMapper = ComponentMapper.getFor(CollisionComponent.class);
@@ -56,19 +61,24 @@ public class AttackSystem extends EntitySystem {
 
                                 HUDSystem hudSystem = getEngine().getSystem(HUDSystem.class);
                                 if (hudSystem != null) {
-                                    if (entity.getComponent(WalkerTagComponent.class) == null) {
-                                        hudSystem.addScore(100); // Добавляем 100 очков за убийство врага
-                                    } else {
-                                        hudSystem.addScore(-50); // Вычитаем 50 очков за попадание в WalkerEntity
-                                    }
+                                    hudSystem.addScore(100);
                                 }
+
+                                int droppedAmmo = AmmoDropUtil.getRandomAmmoAmount();
+                                WeaponType droppedAmmoType = AmmoDropUtil.getRandomWeaponType();
+
+                                if (droppedAmmoType == WeaponType.PISTOL) {
+                                    player.changeAmmoAmountForWeapon(0, droppedAmmo);
+                                } else if (droppedAmmoType == WeaponType.RIFLE) {
+                                    player.changeAmmoAmountForWeapon(1, droppedAmmo);
+                                }
+
+                                System.out.println("Dropped ammo: " + droppedAmmo + " for " + droppedAmmoType);
 
                                 Timer.schedule(new Timer.Task() {
                                     @Override
                                     public void run() {
                                         getEngine().removeEntity(entity);
-                                        if (entity.getComponent(WalkerTagComponent.class) != null)
-                                            Main.getInstance().setScreen(new GameOverScreen());
                                     }
                                 }, sprite.deathAnimation.getAnimationDuration() - 0.05f);
                             } else if (!sprite.isHurtOrDead && sprite.hurtAnimation != null) {
@@ -87,8 +97,5 @@ public class AttackSystem extends EntitySystem {
             }
         }
     }
-
-
-
-
 }
+

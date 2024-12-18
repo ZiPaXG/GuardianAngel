@@ -8,6 +8,7 @@ public class Rifle extends Weapon{
         shootSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/Rifle.wav"));
         reloadSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/RifleReload.wav"));
     }
+
     @Override
     protected void onShoot() {
         shootSound.play();
@@ -16,11 +17,5 @@ public class Rifle extends Weapon{
     @Override
     protected void onReload() {
         reloadSound.play();
-    }
-
-    public void dispose() {
-        if (shootSound != null) {
-            shootSound.dispose();
-        }
     }
 }

@@ -55,8 +55,7 @@ public class AttackSystem extends EntitySystem {
                     HealthComponent health = healthMapper.get(entity);
                     CollisionComponent collision = collisionMapper.get(entity);
                     SpriteComponent sprite = spriteMapper.get(entity);
-                    System.out.println(collision.bounds.x + " " + collision.bounds.y);
-                    System.out.println(mouseX + " " + mouseY);
+
                     if (collision.bounds.contains(mouseX, mouseY)) {
                         if (!health.isDead) {
                             health.health -= weapon.getDamage();

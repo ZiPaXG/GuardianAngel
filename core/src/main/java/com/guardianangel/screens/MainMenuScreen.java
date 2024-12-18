@@ -7,14 +7,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.guardianangel.Main;
@@ -22,14 +21,12 @@ import com.guardianangel.Main;
 public class MainMenuScreen implements Screen {
     private final Stage stage;
     private final Viewport viewport;
-    private final SpriteBatch batch;
 
     public MainMenuScreen() {
         OrthographicCamera camera = new OrthographicCamera();
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
-        batch = new SpriteBatch();
 
-        stage = new Stage(viewport, batch);
+        stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
 
         Skin skin = SkinFactory.createSkin();
@@ -59,8 +56,8 @@ public class MainMenuScreen implements Screen {
         table.setFillParent(true);
 
         table.add(titleLabel).padBottom(50).row();
-        table.add(playButton).width(200).padBottom(20).row();
-        table.add(exitButton).width(200).row();
+        table.add(playButton).width(300).height(80).padBottom(20).row();
+        table.add(exitButton).width(300).height(80).row();
 
         stage.addActor(table);
     }
@@ -98,19 +95,27 @@ public class MainMenuScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
-        batch.dispose();
     }
 }
+
 class SkinFactory {
     public static Skin createSkin() {
         Skin skin = new Skin();
 
-        BitmapFont font = new BitmapFont();
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("UI/10 Font/CyberpunkCraftpixPixel.otf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 32;
+        parameter.color = Color.WHITE;
+        BitmapFont font = generator.generateFont(parameter);
+        generator.dispose();
+
         skin.add("default-font", font);
 
-        Texture buttonTexture = new Texture(Gdx.files.internal("Characters/MainCharacter/Cyborg_jump.png"));
-        Drawable buttonUp = new TextureRegionDrawable(buttonTexture);
-        Drawable buttonDown = new TextureRegionDrawable(buttonTexture);
+        Texture buttonTextureUp = new Texture(Gdx.files.internal("UI/Buttons/Blue_Button_03.png"));
+        Texture buttonTextureDown = new Texture(Gdx.files.internal("UI/Buttons/Blue_Button_02.png"));
+
+        Drawable buttonUp = new com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable(new com.badlogic.gdx.graphics.g2d.TextureRegion(buttonTextureUp));
+        Drawable buttonDown = new com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable(new com.badlogic.gdx.graphics.g2d.TextureRegion(buttonTextureDown));
 
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.up = buttonUp;
@@ -128,3 +133,7 @@ class SkinFactory {
         return skin;
     }
 }
+
+
+
+

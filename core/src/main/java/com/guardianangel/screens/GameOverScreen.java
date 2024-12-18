@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -17,14 +16,12 @@ import com.guardianangel.Main;
 public class GameOverScreen implements Screen {
     private final Stage stage;
     private final Viewport viewport;
-    private final SpriteBatch batch;
 
     public GameOverScreen() {
         OrthographicCamera camera = new OrthographicCamera();
         viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
-        batch = new SpriteBatch();
 
-        stage = new Stage(viewport, batch);
+        stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
 
         Skin skin = SkinFactory.createSkin();
@@ -54,8 +51,8 @@ public class GameOverScreen implements Screen {
         table.setFillParent(true);
 
         table.add(gameOverLabel).padBottom(50).row();
-        table.add(retryButton).width(200).padBottom(20).row();
-        table.add(exitButton).width(200).row();
+        table.add(retryButton).width(300).height(80).padBottom(20).row();
+        table.add(exitButton).width(300).height(80).row();
 
         stage.addActor(table);
     }
@@ -93,8 +90,5 @@ public class GameOverScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
-        batch.dispose();
     }
 }
-
-

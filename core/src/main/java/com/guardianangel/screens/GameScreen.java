@@ -31,6 +31,7 @@ import com.guardianangel.entities.weapons.Rifle;
 import com.guardianangel.entities.weapons.Weapon;
 import com.guardianangel.systems.*;
 import com.guardianangel.utils.CameraController;
+import com.guardianangel.utils.FontManager;
 
 import java.util.ArrayList;
 
@@ -92,6 +93,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
+        FontManager.loadFonts();
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         engine = new Engine();

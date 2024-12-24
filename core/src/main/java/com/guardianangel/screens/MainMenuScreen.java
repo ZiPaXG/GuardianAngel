@@ -2,6 +2,7 @@ package com.guardianangel.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -21,6 +22,7 @@ import com.guardianangel.Main;
 public class MainMenuScreen implements Screen {
     private final Stage stage;
     private final Viewport viewport;
+    private Music mainMenuMusic;
 
     public MainMenuScreen() {
         OrthographicCamera camera = new OrthographicCamera();
@@ -64,6 +66,10 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void show() {
+        mainMenuMusic = Gdx.audio.newMusic(Gdx.files.internal("Sounds/MainMenu.wav"));
+        mainMenuMusic.setLooping(true); // Включаем зацикливание
+        mainMenuMusic.setVolume(0.5f); // Устанавливаем громкость (по желанию)
+        mainMenuMusic.play();
     }
 
     @Override
@@ -90,6 +96,7 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void hide() {
+        mainMenuMusic.stop();
     }
 
     @Override

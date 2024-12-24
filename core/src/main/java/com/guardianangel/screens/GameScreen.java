@@ -21,7 +21,6 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.guardianangel.components.*;
-import com.guardianangel.entities.EnemyEntity;
 import com.guardianangel.entities.PlayerEntity;
 import com.guardianangel.entities.WalkerEntity;
 import com.guardianangel.entities.weapons.Pistol;

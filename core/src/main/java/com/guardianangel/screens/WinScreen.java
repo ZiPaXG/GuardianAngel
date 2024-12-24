@@ -2,6 +2,7 @@ package com.guardianangel.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -16,6 +17,7 @@ import com.guardianangel.Main;
 public class WinScreen implements Screen {
     private final Stage stage;
     private final Viewport viewport;
+    private Music winMusic;
 
     public WinScreen() {
         OrthographicCamera camera = new OrthographicCamera();
@@ -59,6 +61,10 @@ public class WinScreen implements Screen {
 
     @Override
     public void show() {
+        winMusic = Gdx.audio.newMusic(Gdx.files.internal("Sounds/Win.wav"));
+        winMusic.setLooping(false); // Включаем зацикливание
+        winMusic.setVolume(0.5f); // Устанавливаем громкость (по желанию)
+        winMusic.play();
     }
 
     @Override
@@ -85,6 +91,7 @@ public class WinScreen implements Screen {
 
     @Override
     public void hide() {
+        winMusic.stop();
     }
 
     @Override

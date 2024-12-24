@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -45,7 +46,7 @@ public class GameScreen implements Screen {
 
     private TiledMap map;
     private OrthogonalTiledMapRenderer mapRenderer;
-
+    private Music ambientMusic;
 
     private ArrayList<Float> getSaveZoneX(TiledMap map) {
         MapObjects objects = map.getLayers().get("Objects").getObjects();
@@ -92,6 +93,12 @@ public class GameScreen implements Screen {
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         engine = new Engine();
+
+        // Загружаем музыку
+        ambientMusic = Gdx.audio.newMusic(Gdx.files.internal("Sounds/Ambient.wav"));
+        ambientMusic.setLooping(true); // Включаем зацикливание
+        ambientMusic.setVolume(0.5f); // Устанавливаем громкость (по желанию)
+        ambientMusic.play(); // Запускаем музыку
 
         player = new PlayerEntity(new Weapon[]{new Pistol(), new Rifle()}, new int[] {24, 60});
         hudSystem = new HUDSystem(player);
@@ -180,14 +187,18 @@ public class GameScreen implements Screen {
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
-            player.switchWeapon(0);
-            crosshairSystem.changeCrosshair(player.getCurrentWeapon());
-            attackSystem.changeWeapon(player.getCurrentWeapon());
+            if (!player.getCurrentWeapon().isReloading()) {
+                player.switchWeapon(0);
+                crosshairSystem.changeCrosshair(player.getCurrentWeapon());
+                attackSystem.changeWeapon(player.getCurrentWeapon());
+            }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
-            player.switchWeapon(1);
-            crosshairSystem.changeCrosshair(player.getCurrentWeapon());
-            attackSystem.changeWeapon(player.getCurrentWeapon());
+            if (!player.getCurrentWeapon().isReloading()) {
+                player.switchWeapon(1);
+                crosshairSystem.changeCrosshair(player.getCurrentWeapon());
+                attackSystem.changeWeapon(player.getCurrentWeapon());
+            }
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
@@ -209,7 +220,9 @@ public class GameScreen implements Screen {
     public void resume() {}
 
     @Override
-    public void hide() {}
+    public void hide() {
+        ambientMusic.stop();
+    }
 
     @Override
     public void dispose() {
@@ -218,5 +231,6 @@ public class GameScreen implements Screen {
         hudSystem.dispose();
         map.dispose();
         mapRenderer.dispose();
+        ambientMusic.dispose();
     }
 }

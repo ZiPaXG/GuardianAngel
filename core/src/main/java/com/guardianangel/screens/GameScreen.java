@@ -1,5 +1,6 @@
 package com.guardianangel.screens;
 
+import box2dLight.RayHandler;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -42,6 +43,7 @@ public class GameScreen implements Screen {
     private PlayerEntity player;
     private CrosshairSystem crosshairSystem;
     private AttackSystem attackSystem;
+    private RayHandler rayHandler;
 
     private TiledMap map;
     private OrthogonalTiledMapRenderer mapRenderer;
@@ -115,13 +117,18 @@ public class GameScreen implements Screen {
         mapRenderer = new OrthogonalTiledMapRenderer(map, 2.5f);
         mapRenderer.setView(camera);
 
+        rayHandler = new RayHandler(null); // null, если вы не используете Box2D World
+        rayHandler.setAmbientLight(0.95f); // Установка общей освещенности сцены
+        rayHandler.setBlurNum(3);         // Мягкость тени
+        rayHandler.setCombinedMatrix(camera);
+
         crosshairSystem = new CrosshairSystem(camera, player.getCurrentWeapon());
         engine.addSystem(new EnemySystem(cameraController.getCamera()));
         EnemySpawnSystem spawnSystem = new EnemySpawnSystem(engine, cameraController.getCamera());
         engine.addSystem(spawnSystem);
         engine.addSystem(crosshairSystem);
         engine.addSystem(new ReloadSystem(player));
-        attackSystem = new AttackSystem(player.getCurrentWeapon(), player, cameraController.getCamera());
+        attackSystem = new AttackSystem(player.getCurrentWeapon(), player, camera, rayHandler);
         engine.addSystem(attackSystem);
         engine.addSystem(new PathFollowerSystem(spawnSystem, attackSystem));
         engine.addSystem(new HUDSystem(player));
@@ -174,7 +181,7 @@ public class GameScreen implements Screen {
 
         shapeRenderer.end();
         engine.update(delta);
-
+        rayHandler.updateAndRender();
         var players = engine.getEntitiesFor(Family.all(WalkerTagComponent.class).get());
         if (players.size() > 0)
         {
@@ -231,5 +238,8 @@ public class GameScreen implements Screen {
         map.dispose();
         mapRenderer.dispose();
         ambientMusic.dispose();
+        if (rayHandler != null) {
+            rayHandler.dispose();
+        }
     }
 }

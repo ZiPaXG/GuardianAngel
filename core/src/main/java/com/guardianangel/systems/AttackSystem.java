@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Timer;
@@ -16,6 +17,8 @@ import com.guardianangel.entities.weapons.Weapon;
 import com.guardianangel.entities.weapons.WeaponType;
 import com.guardianangel.screens.GameOverScreen;
 import com.guardianangel.utils.AmmoDropUtil;
+import box2dLight.PointLight;
+import box2dLight.RayHandler;
 
 public class AttackSystem extends EntitySystem {
     private Weapon weapon;
@@ -25,16 +28,19 @@ public class AttackSystem extends EntitySystem {
     private ComponentMapper<CollisionComponent> collisionMapper;
     public int countDeathEnemy;
     private OrthographicCamera camera;
-    public AttackSystem(Weapon weapon, PlayerEntity player, OrthographicCamera camera) {
+    private RayHandler rayHandler;
+
+    // Конструктор AttackSystem
+    public AttackSystem(Weapon weapon, PlayerEntity player, OrthographicCamera camera, RayHandler rayHandler) {
         this.weapon = weapon;
         this.player = player;
         this.spriteMapper = ComponentMapper.getFor(SpriteComponent.class);
         this.healthMapper = ComponentMapper.getFor(HealthComponent.class);
         this.collisionMapper = ComponentMapper.getFor(CollisionComponent.class);
-        countDeathEnemy = 0;
+        this.countDeathEnemy = 0;
         this.camera = camera;
+        this.rayHandler = rayHandler; // Инициализация RayHandler
     }
-
     public void changeWeapon(Weapon weapon) {
         this.weapon = weapon;
     }
@@ -50,6 +56,17 @@ public class AttackSystem extends EntitySystem {
                 Vector3 mouseWorldCoords = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
                 float mouseX = mouseWorldCoords.x;
                 float mouseY = mouseWorldCoords.y;
+
+                PointLight muzzleFlash = new PointLight(rayHandler, 64, new Color(200.0f, 0.5f, 0.2f, 1.0f), 150, mouseX, mouseY);
+                muzzleFlash.setSoftnessLength(0f);
+
+                // Удаление света через 0.1 секунды
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        muzzleFlash.remove();
+                    }
+                }, 0.05f);
 
                 for (Entity entity : getEngine().getEntitiesFor(Family.all(PositionComponent.class, HealthComponent.class, CollisionComponent.class, SpriteComponent.class).get())) {
                     HealthComponent health = healthMapper.get(entity);

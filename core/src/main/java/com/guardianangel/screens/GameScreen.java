@@ -319,14 +319,10 @@ public class GameScreen implements Screen {
     public void dispose() {
         batch.dispose();
         background.dispose();
-        hudSystem.dispose();
         map.dispose();
         mapRenderer.dispose();
         ambientMusic.dispose();
-        thunderSound.dispose(); // Останавливаем гром и освобождаем ресурсы
-        if (rayHandler != null) {
-            rayHandler.dispose();
-        }
+        thunderSound.dispose();
     }
 
 }

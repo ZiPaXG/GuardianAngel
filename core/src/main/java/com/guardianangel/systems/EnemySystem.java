@@ -38,7 +38,7 @@ public class EnemySystem extends EntitySystem {
 
             if (position.x + 64 < camera.position.x - camera.viewportWidth / 2) {
                 getEngine().removeEntity(entity);
-                Main.getInstance().setScreen(new GameOverScreen());
+                Main.getInstance().changeScreen(new GameOverScreen());
             }
         }
     }

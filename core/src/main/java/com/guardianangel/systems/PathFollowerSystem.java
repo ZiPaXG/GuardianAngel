@@ -12,6 +12,7 @@ import com.guardianangel.components.PathComponent;
 import com.guardianangel.components.PositionComponent;
 import com.guardianangel.components.SpriteComponent;
 import com.guardianangel.components.WalkerTagComponent;
+import com.guardianangel.screens.GameOverScreen;
 import com.guardianangel.screens.WinScreen;
 
 public class PathFollowerSystem extends EntitySystem {
@@ -28,7 +29,7 @@ public class PathFollowerSystem extends EntitySystem {
     @Override
     public void update(float deltaTime) {
         if (spawnSystem.getWaves() == 0)
-            Main.getInstance().setScreen(new WinScreen());
+            Main.getInstance().changeScreen(new WinScreen());
         if (attackSystem.countDeathEnemy == spawnSystem.getMaxEnemiesOnWave()) {
             moveToNextPoint = true;
             attackSystem.countDeathEnemy = 0;

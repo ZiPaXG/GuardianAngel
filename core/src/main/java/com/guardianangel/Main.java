@@ -1,6 +1,7 @@
 package com.guardianangel;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Screen;
 import com.guardianangel.screens.MainMenuScreen;
 
 public class Main extends Game {
@@ -14,6 +15,14 @@ public class Main extends Game {
     public void create() {
         instance = this;
         this.setScreen(new MainMenuScreen());
+    }
+
+    public void changeScreen(Screen newScreen) {
+        Screen currentScreen = getScreen();
+        if (currentScreen != null) {
+            currentScreen.dispose();
+        }
+        this.setScreen(newScreen); // Переходим на новый экран
     }
 
     @Override

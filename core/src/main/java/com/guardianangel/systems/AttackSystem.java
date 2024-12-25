@@ -57,10 +57,9 @@ public class AttackSystem extends EntitySystem {
                 float mouseX = mouseWorldCoords.x;
                 float mouseY = mouseWorldCoords.y;
 
-                PointLight muzzleFlash = new PointLight(rayHandler, 64, new Color(200.0f, 0.5f, 0.2f, 1.0f), 150, mouseX, mouseY);
+                PointLight muzzleFlash = new PointLight(rayHandler, 64, new Color(200.0f, 0.5f, 0.2f, 1.0f), 150, Gdx.input.getX(), mouseY);
                 muzzleFlash.setSoftnessLength(0f);
 
-                // Удаление света через 0.1 секунды
                 Timer.schedule(new Timer.Task() {
                     @Override
                     public void run() {
@@ -78,6 +77,9 @@ public class AttackSystem extends EntitySystem {
                             health.health -= weapon.getDamage();
 
                             if (health.health <= 0) {
+                                if (sprite.isInHurtState) {
+                                    sprite.isInHurtState = false;
+                                }
                                 health.isDead = true;
                                 sprite.setAnimation(sprite.deathAnimation);
                                 sprite.isHurtOrDead = true;
@@ -111,7 +113,7 @@ public class AttackSystem extends EntitySystem {
                                         @Override
                                         public void run() {
                                             getEngine().removeEntity(entity);
-                                            Main.getInstance().setScreen(new GameOverScreen());
+                                            Main.getInstance().changeScreen(new GameOverScreen());
                                         }
                                     }, sprite.deathAnimation.getAnimationDuration() - 0.05f);
                                 }
@@ -122,7 +124,9 @@ public class AttackSystem extends EntitySystem {
                                 Timer.schedule(new Timer.Task() {
                                     @Override
                                     public void run() {
-                                        sprite.isInHurtState = false;
+                                        if (!health.isDead) {  // Проверяем, не умер ли персонаж
+                                            sprite.isInHurtState = false;
+                                        }
                                     }
                                 }, sprite.hurtAnimation.getAnimationDuration());
                             }

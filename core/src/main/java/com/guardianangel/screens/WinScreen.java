@@ -36,7 +36,7 @@ public class WinScreen implements Screen {
         retryButton.addListener(new ClickListener() {
             @Override
             public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-                Main.getInstance().setScreen(new GameScreen());
+                Main.getInstance().changeScreen(new GameScreen());
             }
         });
 

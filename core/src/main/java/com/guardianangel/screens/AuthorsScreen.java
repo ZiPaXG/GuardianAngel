@@ -41,7 +41,7 @@ class AuthorsScreen implements Screen {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-                Main.getInstance().setScreen(new MainMenuScreen());
+                Main.getInstance().changeScreen(new MainMenuScreen());
             }
         });
 

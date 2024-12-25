@@ -1,7 +1,4 @@
-1. Anokolisa: Action Pack - CITY
-2. Anokolisa: Central City
-3. CamboyanCrabs: Creepy Lab Assets
-4. Free Game Assets (GUI, Sprite, Tilesets)
-5. GCoMs Games: Tactical Military Pixel 150 Icons and Items
-6. fightswithbears: 2D Health & Ammo Pickups
-7. Ordinary Bumblebee: Basic Buttons Asset Pack
+1. Anokolisa: Central City
+2. Free Game Assets (GUI, Sprite, Tilesets)
+3. GCoMs Games: Tactical Military Pixel 150 Icons and Items
+4. Ordinary Bumblebee: Basic Buttons Asset Pack

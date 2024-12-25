@@ -11,6 +11,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapObject;
@@ -21,6 +22,8 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
 import com.guardianangel.components.*;
 import com.guardianangel.entities.PlayerEntity;
 import com.guardianangel.entities.WalkerEntity;
@@ -44,10 +47,15 @@ public class GameScreen implements Screen {
     private CrosshairSystem crosshairSystem;
     private AttackSystem attackSystem;
     private RayHandler rayHandler;
-
+    private Animation<Texture> rainAnimation;
+    private float rainAnimationTime;
     private TiledMap map;
     private OrthogonalTiledMapRenderer mapRenderer;
     private Music ambientMusic;
+    private float lightningMinInterval = 6f;
+    private float lightningMaxInterval = 7f;
+    private Music thunderSound;
+    private boolean lightningEnabled = true;
 
     private ArrayList<Float> getSaveZoneX(TiledMap map) {
         MapObjects objects = map.getLayers().get("Objects").getObjects();
@@ -62,7 +70,78 @@ public class GameScreen implements Screen {
         }
         return rect_x;
     }
+    private void loadRainAnimation() {
+        Array<Texture> rainFrames = new Array<>();
+        int frameCount = 12; // Количество кадров в анимации дождя
 
+        for (int i = 1; i <= frameCount; i++) {
+            rainFrames.add(new Texture(Gdx.files.internal("Rain/"+i+".gif")));
+        }
+
+        rainAnimation = new Animation<>(0.03f, rainFrames, Animation.PlayMode.LOOP); // 0.1f — длительность кадра
+        rainAnimationTime = 0f;
+    }
+    private void renderRainAnimation(SpriteBatch batch, OrthographicCamera camera) {
+        rainAnimationTime += Gdx.graphics.getDeltaTime(); // Обновляем время анимации
+
+        // Получаем текущий кадр анимации
+        Texture currentFrame = rainAnimation.getKeyFrame(rainAnimationTime);
+
+        // Отрисовываем анимацию поверх всего экрана
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+        batch.draw(currentFrame,
+            camera.position.x - camera.viewportWidth / 2,
+            camera.position.y - camera.viewportHeight / 2,
+            camera.viewportWidth,
+            camera.viewportHeight);
+        batch.end();
+    }
+    private void createLightningEffect() {
+        if (!lightningEnabled) return;
+        // Уровни освещения для эффекта молнии
+        float[] lightningSequence = {1f, 0.8f, 0.9f, 0.6f};
+        // Задержки между изменениями уровня освещения
+        float[] delays = {0.1f, 0.1f, 0.1f}; // Все этапы длятся по 0.1 секунды
+
+        // Последовательно применяем уровни освещения с таймерами
+        float cumulativeDelay = 0f; // Суммарная задержка для каждого этапа
+        for (int i = 0; i < lightningSequence.length; i++) {
+            final float lightLevel = lightningSequence[i];
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    rayHandler.setAmbientLight(lightLevel);
+                }
+            }, cumulativeDelay);
+
+            // Добавляем текущую задержку к общей
+            if (i < delays.length) {
+                cumulativeDelay += delays[i];
+            }
+        }
+
+        // Воспроизводим звук грома при молнии
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                thunderSound.play();
+            }
+        }, cumulativeDelay); // Звук срабатывает в тот же момент, когда молния появляется
+
+        // Планируем следующую молнию
+        scheduleNextLightning();
+    }
+    private void scheduleNextLightning() {
+        float nextInterval = lightningMinInterval + (float) Math.random() * (lightningMaxInterval - lightningMinInterval);
+
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                createLightningEffect();
+            }
+        }, nextInterval);
+    }
     public void createEntities() {
         ArrayList<Float> saveZoneX = getSaveZoneX(map);
 
@@ -96,11 +175,13 @@ public class GameScreen implements Screen {
         engine = new Engine();
 
         // Загружаем музыку
-        ambientMusic = Gdx.audio.newMusic(Gdx.files.internal("Sounds/Ambient.wav"));
+        ambientMusic = Gdx.audio.newMusic(Gdx.files.internal("Sounds/Rain.wav"));
         ambientMusic.setLooping(true); // Включаем зацикливание
         ambientMusic.setVolume(0.5f); // Устанавливаем громкость (по желанию)
         ambientMusic.play(); // Запускаем музыку
-
+        thunderSound = Gdx.audio.newMusic(Gdx.files.internal("Sounds/Grom.wav"));
+        thunderSound.setVolume(0.5f); // Можно регулировать громкость
+        thunderSound.setLooping(false);
         player = new PlayerEntity(new Weapon[]{new Pistol(), new Rifle()}, new int[] {24, 60});
         hudSystem = new HUDSystem(player);
 
@@ -118,7 +199,7 @@ public class GameScreen implements Screen {
         mapRenderer.setView(camera);
 
         rayHandler = new RayHandler(null); // null, если вы не используете Box2D World
-        rayHandler.setAmbientLight(0.95f); // Установка общей освещенности сцены
+        rayHandler.setAmbientLight(0.6f); // Установка общей освещенности сцены
         rayHandler.setBlurNum(3);         // Мягкость тени
         rayHandler.setCombinedMatrix(camera);
 
@@ -135,6 +216,8 @@ public class GameScreen implements Screen {
         engine.addSystem(new RenderSystem(camera));
         engine.addSystem(hudSystem);
         createEntities();
+        scheduleNextLightning();
+        loadRainAnimation();
     }
 
     @Override
@@ -159,7 +242,7 @@ public class GameScreen implements Screen {
 
         mapRenderer.setView(cameraController.getCamera());
         mapRenderer.render();
-
+        renderRainAnimation(batch, cameraController.getCamera());
         shapeRenderer.setProjectionMatrix(cameraController.getCamera().combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
@@ -227,7 +310,9 @@ public class GameScreen implements Screen {
 
     @Override
     public void hide() {
+        lightningEnabled = false;
         ambientMusic.stop();
+        thunderSound.stop();
     }
 
     @Override
@@ -238,8 +323,10 @@ public class GameScreen implements Screen {
         map.dispose();
         mapRenderer.dispose();
         ambientMusic.dispose();
+        thunderSound.dispose(); // Останавливаем гром и освобождаем ресурсы
         if (rayHandler != null) {
             rayHandler.dispose();
         }
     }
+
 }

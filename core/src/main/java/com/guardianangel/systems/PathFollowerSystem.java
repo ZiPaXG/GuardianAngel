@@ -3,16 +3,12 @@ package com.guardianangel.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Timer;
 import com.guardianangel.Main;
 import com.guardianangel.components.PathComponent;
 import com.guardianangel.components.PositionComponent;
 import com.guardianangel.components.SpriteComponent;
 import com.guardianangel.components.WalkerTagComponent;
-import com.guardianangel.screens.GameOverScreen;
 import com.guardianangel.screens.WinScreen;
 
 public class PathFollowerSystem extends EntitySystem {

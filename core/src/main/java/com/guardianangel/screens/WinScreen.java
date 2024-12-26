@@ -62,8 +62,8 @@ public class WinScreen implements Screen {
     @Override
     public void show() {
         winMusic = Gdx.audio.newMusic(Gdx.files.internal("Sounds/Win.wav"));
-        winMusic.setLooping(false); // Включаем зацикливание
-        winMusic.setVolume(0.5f); // Устанавливаем громкость (по желанию)
+        winMusic.setLooping(false);
+        winMusic.setVolume(0.5f);
         winMusic.play();
     }
 

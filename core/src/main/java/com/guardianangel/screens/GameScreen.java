@@ -72,22 +72,20 @@ public class GameScreen implements Screen {
     }
     private void loadRainAnimation() {
         Array<Texture> rainFrames = new Array<>();
-        int frameCount = 12; // Количество кадров в анимации дождя
+        int frameCount = 12;
 
         for (int i = 1; i <= frameCount; i++) {
             rainFrames.add(new Texture(Gdx.files.internal("Rain/"+i+".gif")));
         }
 
-        rainAnimation = new Animation<>(0.03f, rainFrames, Animation.PlayMode.LOOP); // 0.1f — длительность кадра
+        rainAnimation = new Animation<>(0.03f, rainFrames, Animation.PlayMode.LOOP);
         rainAnimationTime = 0f;
     }
     private void renderRainAnimation(SpriteBatch batch, OrthographicCamera camera) {
-        rainAnimationTime += Gdx.graphics.getDeltaTime(); // Обновляем время анимации
+        rainAnimationTime += Gdx.graphics.getDeltaTime();
 
-        // Получаем текущий кадр анимации
         Texture currentFrame = rainAnimation.getKeyFrame(rainAnimationTime);
 
-        // Отрисовываем анимацию поверх всего экрана
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         batch.draw(currentFrame,
@@ -99,13 +97,10 @@ public class GameScreen implements Screen {
     }
     private void createLightningEffect() {
         if (!lightningEnabled) return;
-        // Уровни освещения для эффекта молнии
         float[] lightningSequence = {1f, 0.8f, 0.9f, 0.6f};
-        // Задержки между изменениями уровня освещения
-        float[] delays = {0.1f, 0.1f, 0.1f}; // Все этапы длятся по 0.1 секунды
+        float[] delays = {0.1f, 0.1f, 0.1f};
 
-        // Последовательно применяем уровни освещения с таймерами
-        float cumulativeDelay = 0f; // Суммарная задержка для каждого этапа
+        float cumulativeDelay = 0f;
         for (int i = 0; i < lightningSequence.length; i++) {
             final float lightLevel = lightningSequence[i];
             Timer.schedule(new Timer.Task() {
@@ -115,21 +110,18 @@ public class GameScreen implements Screen {
                 }
             }, cumulativeDelay);
 
-            // Добавляем текущую задержку к общей
             if (i < delays.length) {
                 cumulativeDelay += delays[i];
             }
         }
 
-        // Воспроизводим звук грома при молнии
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
                 thunderSound.play();
             }
-        }, cumulativeDelay); // Звук срабатывает в тот же момент, когда молния появляется
+        }, cumulativeDelay);
 
-        // Планируем следующую молнию
         scheduleNextLightning();
     }
     private void scheduleNextLightning() {
@@ -174,13 +166,12 @@ public class GameScreen implements Screen {
         shapeRenderer = new ShapeRenderer();
         engine = new Engine();
 
-        // Загружаем музыку
         ambientMusic = Gdx.audio.newMusic(Gdx.files.internal("Sounds/Rain.wav"));
-        ambientMusic.setLooping(true); // Включаем зацикливание
-        ambientMusic.setVolume(0.5f); // Устанавливаем громкость (по желанию)
-        ambientMusic.play(); // Запускаем музыку
+        ambientMusic.setLooping(true);
+        ambientMusic.setVolume(0.5f);
+        ambientMusic.play();
         thunderSound = Gdx.audio.newMusic(Gdx.files.internal("Sounds/Grom.wav"));
-        thunderSound.setVolume(0.5f); // Можно регулировать громкость
+        thunderSound.setVolume(0.5f);
         thunderSound.setLooping(false);
         player = new PlayerEntity(new Weapon[]{new Pistol(), new Rifle()}, new int[] {24, 60});
         hudSystem = new HUDSystem(player);
@@ -198,9 +189,9 @@ public class GameScreen implements Screen {
         mapRenderer = new OrthogonalTiledMapRenderer(map, 2.5f);
         mapRenderer.setView(camera);
 
-        rayHandler = new RayHandler(null); // null, если вы не используете Box2D World
-        rayHandler.setAmbientLight(0.6f); // Установка общей освещенности сцены
-        rayHandler.setBlurNum(3);         // Мягкость тени
+        rayHandler = new RayHandler(null);
+        rayHandler.setAmbientLight(0.6f);
+        rayHandler.setBlurNum(3);
         rayHandler.setCombinedMatrix(camera);
 
         crosshairSystem = new CrosshairSystem(camera, player.getCurrentWeapon());
@@ -226,10 +217,6 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         cameraController.update(delta);
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-            cameraController.shiftRight();
-        }
 
         batch.setProjectionMatrix(cameraController.getCamera().combined);
         batch.begin();

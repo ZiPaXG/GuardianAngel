@@ -34,7 +34,7 @@ public class EnemySpawnSystem extends EntitySystem {
 
             int enemyType = random.nextBoolean() ? 1 : 2;
 
-            EnemyEntity enemy = new EnemyEntity(spawnX, 50, enemyType);
+            EnemyEntity enemy = new EnemyEntity(spawnX, enemyType);
             engine.addEntity(enemy);
 
             enemiesSpawned++;

@@ -39,7 +39,7 @@ public class AttackSystem extends EntitySystem {
         this.collisionMapper = ComponentMapper.getFor(CollisionComponent.class);
         this.countDeathEnemy = 0;
         this.camera = camera;
-        this.rayHandler = rayHandler; // Инициализация RayHandler
+        this.rayHandler = rayHandler;
     }
     public void changeWeapon(Weapon weapon) {
         this.weapon = weapon;
@@ -124,7 +124,7 @@ public class AttackSystem extends EntitySystem {
                                 Timer.schedule(new Timer.Task() {
                                     @Override
                                     public void run() {
-                                        if (!health.isDead) {  // Проверяем, не умер ли персонаж
+                                        if (!health.isDead) {
                                             sprite.isInHurtState = false;
                                         }
                                     }

@@ -18,7 +18,7 @@ public class SpriteComponent implements Component {
 
     public float stateTime = 0f;
     private float scale = 3f;
-    public boolean flipHorizontally = false; // Флаг для флипа
+    public boolean flipHorizontally = false;
 
     public SpriteComponent(Texture idleSpriteSheet, int idleFrameCount, float idleFrameDuration,
                            Texture runSpriteSheet, int runFrameCount, float runFrameDuration,

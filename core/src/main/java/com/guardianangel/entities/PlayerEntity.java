@@ -39,12 +39,4 @@ public class PlayerEntity extends Entity {
             ammoAmount[weaponIndex] = Math.max(0, ammoAmount[weaponIndex] + changeAmount);
         }
     }
-
-    public int getScoreCount() {
-        return scoreCount;
-    }
-
-    public void addScore(int score) {
-        this.scoreCount += score;
-    }
 }

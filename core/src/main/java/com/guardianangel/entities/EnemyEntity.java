@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.guardianangel.components.*;
 
 public class EnemyEntity extends Entity {
-    public EnemyEntity(float x, int initialHealth, int enemyType) {
+    public EnemyEntity(float x, int enemyType) {
         PositionComponent position = new PositionComponent();
         position.x = x;
         position.y = 241.70013f;

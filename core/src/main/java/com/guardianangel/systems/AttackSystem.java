@@ -30,7 +30,6 @@ public class AttackSystem extends EntitySystem {
     private OrthographicCamera camera;
     private RayHandler rayHandler;
 
-    // Конструктор AttackSystem
     public AttackSystem(Weapon weapon, PlayerEntity player, OrthographicCamera camera, RayHandler rayHandler) {
         this.weapon = weapon;
         this.player = player;

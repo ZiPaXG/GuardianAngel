@@ -22,7 +22,7 @@ public class Main extends Game {
         if (currentScreen != null) {
             currentScreen.dispose();
         }
-        this.setScreen(newScreen); // Переходим на новый экран
+        this.setScreen(newScreen);
     }
 
     @Override
